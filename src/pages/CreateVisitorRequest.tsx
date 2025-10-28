@@ -92,7 +92,7 @@ const CreateVisitorRequest = () => {
             Create Visitor Request
           </h1>
           <p className="text-muted-foreground mb-8">
-            Describe your desired travel experience
+            Enter your desired location, date, and information, and we'll find local guides nearby and contact you through the contact information you provide.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -135,74 +135,46 @@ const CreateVisitorRequest = () => {
               />
             </div>
 
+
+            
             <div className="space-y-2">
-              <Label htmlFor="activity">Activity Details</Label>
-              <Textarea
-                id="activity"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                placeholder="Describe what you'd like to experience"
-                rows={4}
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="age_range">My Age Range</Label>
-                <Select
-                  value={formData.age_range}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, age_range: value })
+                <Label htmlFor="companion_genders">Companion Details (Number & Gender)</Label>
+                <Input
+                  id="companion_genders"
+                  value={formData.companion_genders}
+                  onChange={(e) =>
+                    setFormData({ ...formData, companion_genders: e.target.value })
                   }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="20s">20s</SelectItem>
-                    <SelectItem value="30s">30s</SelectItem>
-                    <SelectItem value="40s">40s</SelectItem>
-                    <SelectItem value="50+">50+</SelectItem>
-                  </SelectContent>
-                </Select>
+                  placeholder="e.g. 2 males, 1 female"
+                />
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="gender">My Gender</Label>
-                <Select
-                  value={formData.gender}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, gender: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="any">Any</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="languages">Languages Spoken</Label>
-              <Input
+              <Textarea
                 id="languages"
                 value={formData.languages}
                 onChange={(e) =>
                   setFormData({ ...formData, languages: e.target.value })
                 }
                 required
-                placeholder="e.g., English, Korean, Japanese"
+                placeholder="e.g. English 3, Korean 4 (Language proficiency level 1-5)"
               />
             </div>
-
+            
+            <div className="space-y-2">
+              <Label htmlFor="contact">Contact Information</Label>
+              <Input
+                id="contact"
+                value={formData.contact}
+                onChange={(e) =>
+                  setFormData({ ...formData, contact: e.target.value })
+                }
+                placeholder="e.g., Instagram, Email, Phone"
+                required
+              />
+            </div>
+            
             <div className="border-t pt-6 mt-6">
               <h3 className="text-lg font-semibold text-foreground mb-4">Preferred Local Guide</h3>
               
@@ -249,48 +221,9 @@ const CreateVisitorRequest = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="participants">Number of Companions</Label>
-                <Input
-                  id="participants"
-                  type="number"
-                  min="1"
-                  max="20"
-                  value={formData.participants}
-                  onChange={(e) =>
-                    setFormData({ ...formData, participants: parseInt(e.target.value) })
-                  }
-                  placeholder="How many people?"
-                  required
-                />
-              </div>
+            
 
-              <div className="space-y-2">
-                <Label htmlFor="companion_genders">Companion Genders</Label>
-                <Input
-                  id="companion_genders"
-                  value={formData.companion_genders}
-                  onChange={(e) =>
-                    setFormData({ ...formData, companion_genders: e.target.value })
-                  }
-                  placeholder="e.g. 2 males, 1 female"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="contact">Contact Information</Label>
-              <Textarea
-                id="contact"
-                value={formData.contact}
-                onChange={(e) =>
-                  setFormData({ ...formData, contact: e.target.value })
-                }
-                placeholder="e.g., Phone, Instagram, Email"
-                required
-              />
-            </div>
+            
 
             <div className="border-t pt-6 mt-6">
               <div className="flex items-start space-x-3">
@@ -335,14 +268,7 @@ const CreateVisitorRequest = () => {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/invitations")}
-                className="flex-1"
-              >
-                Browse Invitations
-              </Button>
+
               <Button
                 type="submit"
                 className="flex-1"

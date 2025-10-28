@@ -46,8 +46,11 @@ const InvitationList = () => {
           <h1 className="text-4xl font-bold text-foreground mb-2">
             Local Invitations
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Browse invitations from local guides
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Browse invitations from local guides and apply. If successfully matched, we'll contact you through the provided contact information.
+          </p>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Currently, the invitation translation feature is not available, and it will be provided in the near future.
           </p>
         </div>
 
@@ -77,7 +80,7 @@ const InvitationList = () => {
                   <div className="flex items-start gap-3 text-muted-foreground">
                     <Calendar className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      {new Date(invitation.time).toLocaleString("en-US")}
+                      {invitation.time}
                     </span>
                   </div>
 
@@ -109,16 +112,6 @@ const InvitationList = () => {
                   <Badge variant="secondary" className="capitalize">
                     {invitation.gender}
                   </Badge>
-                  {invitation.preferred_gender !== "any" && (
-                    <Badge variant="outline" className="capitalize">
-                      Prefers {invitation.preferred_gender}
-                    </Badge>
-                  )}
-                  {invitation.preferred_age_range !== "any" && (
-                    <Badge variant="outline">
-                      Prefers {invitation.preferred_age_range}
-                    </Badge>
-                  )}
                 </div>
 
                 <Button

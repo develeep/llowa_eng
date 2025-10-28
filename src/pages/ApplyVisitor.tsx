@@ -7,10 +7,12 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, Calendar, MapPin, Activity, Users, Languages } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { Textarea } from "@/components/ui/textarea";
 
 type Invitation = Tables<"invitations">;
 
@@ -19,9 +21,12 @@ const ApplyVisitor = () => {
   const { invitationId } = useParams();
   const [invitation, setInvitation] = useState<Invitation | null>(null);
   const [formData, setFormData] = useState({
-    participants: 1,
+    participant_details: "",
     interested_location: "",
     contact: "",
+    languages: "",
+    age_range: "",
+    preferred_date: "",
   });
   const [loading, setLoading] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -70,12 +75,15 @@ const ApplyVisitor = () => {
 
       // 3. contact_id를 사용하여 application 저장
       const { error: applicationError } = await supabase
-        .from("applications")
+        .from("visitor_applications")
         .insert({
           invitation_id: invitationId,
-          participants: formData.participants,
+          participant_details: formData.participant_details,
           interested_location: formData.interested_location,
           contact_id: contactId,
+          age_range: formData.age_range,
+          languages: formData.languages,
+          preferred_date: formData.preferred_date || null,
         });
 
       if (applicationError) throw applicationError;
@@ -119,8 +127,8 @@ const ApplyVisitor = () => {
             <div className="flex items-start gap-3 text-muted-foreground">
               <Calendar className="h-5 w-5 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-sm text-muted-foreground">Time</p>
-                <p className="text-foreground">{new Date(invitation.time).toLocaleString("en-US")}</p>
+                <p className="text-sm text-muted-foreground">Available days and time slots</p>
+                <p className="text-foreground">{invitation.time}</p>
               </div>
             </div>
 
@@ -164,16 +172,6 @@ const ApplyVisitor = () => {
             <Badge variant="secondary" className="capitalize">
               {invitation.gender}
             </Badge>
-            {invitation.preferred_gender !== "any" && (
-              <Badge variant="outline" className="capitalize">
-                Prefers {invitation.preferred_gender}
-              </Badge>
-            )}
-            {invitation.preferred_age_range !== "any" && (
-              <Badge variant="outline">
-                Prefers {invitation.preferred_age_range}
-              </Badge>
-            )}
           </div>
         </Card>
 
@@ -183,42 +181,70 @@ const ApplyVisitor = () => {
               Apply for Visit
             </h1>
             <p className="text-muted-foreground">
-              Ready to join? Fill out your application
+            Browse invitations from local guides and apply. If successfully matched, we'll contact you through the provided contact information.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="participants">Number of People</Label>
+              <Label htmlFor="participant_details">Participant Details (Number & Gender)</Label>
               <Input
-                id="participants"
-                type="number"
-                min="1"
-                max={invitation.max_participants}
-                value={formData.participants}
+                id="participant_details"
+                value={formData.participant_details}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    participants: parseInt(e.target.value),
-                  })
+                  setFormData({ ...formData, participant_details: e.target.value })
                 }
                 required
+                placeholder="e.g., 2 males, 1 female"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="interested_location">Interested Places</Label>
-              <Input
-                id="interested_location"
-                value={formData.interested_location}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    interested_location: e.target.value,
-                  })
+              <Label htmlFor="age_range">Age Range</Label>
+              <Select
+                value={formData.age_range}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, age_range: value })
                 }
                 required
-                placeholder="e.g. Traditional markets, cafe streets, etc."
+              >
+                <SelectTrigger id="age_range">
+                  <SelectValue placeholder="Select your group's age range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="20s">20s</SelectItem>
+                  <SelectItem value="30s">30s</SelectItem>
+                  <SelectItem value="40s">40s</SelectItem>
+                  <SelectItem value="50+">50+</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="languages">Languages Spoken</Label>
+              <Textarea
+                id="languages"
+                value={formData.languages}
+                onChange={(e) =>
+                  setFormData({ ...formData, languages: e.target.value })
+                }
+                required
+                placeholder="e.g. English 3, Korean 4 (Language proficiency level 1-5)"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="preferred_date">Preferred Visit Date & Time</Label>
+              <Input
+                id="preferred_date"
+                type="datetime-local"
+                value={formData.preferred_date}
+                onChange={(e) =>
+                  setFormData({ ...formData, preferred_date: e.target.value })
+                }
+                min={new Date().toISOString().slice(0, 16)}
+                placeholder="Select your preferred visit date and time"
+                className="w-full"
               />
             </div>
 
@@ -231,7 +257,7 @@ const ApplyVisitor = () => {
                   setFormData({ ...formData, contact: e.target.value })
                 }
                 required
-                placeholder="e.g., Phone, Instagram, Email"
+                placeholder="e.g., Instagram, Email, Phone"
               />
             </div>
 
@@ -293,3 +319,6 @@ const ApplyVisitor = () => {
 };
 
 export default ApplyVisitor;
+
+
+

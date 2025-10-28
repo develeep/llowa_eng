@@ -12,63 +12,33 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
-      applications: {
-        Row: {
-          application_type: string
-          contact_id: string | null
-          created_at: string | null
-          id: string
-          interested_location: string
-          invitation_id: string | null
-          participants: number
-          visitor_request_id: string | null
-        }
-        Insert: {
-          application_type?: string
-          contact_id?: string | null
-          created_at?: string | null
-          id?: string
-          interested_location: string
-          invitation_id?: string | null
-          participants: number
-          visitor_request_id?: string | null
-        }
-        Update: {
-          application_type?: string
-          contact_id?: string | null
-          created_at?: string | null
-          id?: string
-          interested_location?: string
-          invitation_id?: string | null
-          participants?: number
-          visitor_request_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "applications_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "applications_invitation_id_fkey"
-            columns: ["invitation_id"]
-            isOneToOne: false
-            referencedRelation: "invitations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "applications_visitor_request_id_fkey"
-            columns: ["visitor_request_id"]
-            isOneToOne: false
-            referencedRelation: "visitor_requests"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       contacts: {
         Row: {
           contact_info: string
@@ -146,6 +116,108 @@ export type Database = {
           },
         ]
       }
+      local_applications: {
+        Row: {
+          age_range: string
+          contact_id: string | null
+          created_at: string | null
+          gender: string
+          id: string
+          interested_location: string
+          languages: string
+          participants: number
+          visitor_request_id: string
+        }
+        Insert: {
+          age_range?: string
+          contact_id?: string | null
+          created_at?: string | null
+          gender?: string
+          id?: string
+          interested_location: string
+          languages?: string
+          participants: number
+          visitor_request_id: string
+        }
+        Update: {
+          age_range?: string
+          contact_id?: string | null
+          created_at?: string | null
+          gender?: string
+          id?: string
+          interested_location?: string
+          languages?: string
+          participants?: number
+          visitor_request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitor_applications_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitor_applications_visitor_request_id_fkey"
+            columns: ["visitor_request_id"]
+            isOneToOne: false
+            referencedRelation: "visitor_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visitor_applications: {
+        Row: {
+          age_range: string
+          contact_id: string | null
+          created_at: string | null
+          id: string
+          interested_location: string
+          invitation_id: string
+          languages: string
+          participant_details: string
+          preferred_date: string | null
+        }
+        Insert: {
+          age_range?: string
+          contact_id?: string | null
+          created_at?: string | null
+          id?: string
+          interested_location: string
+          invitation_id: string
+          languages?: string
+          participant_details?: string
+          preferred_date?: string | null
+        }
+        Update: {
+          age_range?: string
+          contact_id?: string | null
+          created_at?: string | null
+          id?: string
+          interested_location?: string
+          invitation_id?: string
+          languages?: string
+          participant_details?: string
+          preferred_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       visitor_requests: {
         Row: {
           age_range: string
@@ -204,66 +276,12 @@ export type Database = {
       }
     }
     Views: {
-      invitations_public: {
-        Row: {
-          activity: string
-          age_range: string
-          contact_id: string | null
-          created_at: string | null
-          gender: string
-          id: string
-          languages: string
-          location: string
-          max_participants: number
-          preferred_age_range: string
-          preferred_gender: string
-          time: string
-          title: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "invitations_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      visitor_requests_public: {
-        Row: {
-          age_range: string
-          companion_genders: string
-          contact_id: string | null
-          created_at: string | null
-          gender: string
-          id: string
-          languages: string
-          location: string
-          participants: number
-          preferred_age_range: string
-          preferred_gender: string
-          time: string
-          title: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "visitor_requests_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
-      get_contact_info: {
-        Args: {
-          p_contact_id: string
-        }
-        Returns: string
-      }
+      cleanup_old_applications: { Args: never; Returns: undefined }
+      cleanup_old_invitations: { Args: never; Returns: undefined }
+      cleanup_old_visitor_requests: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
@@ -392,6 +410,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
